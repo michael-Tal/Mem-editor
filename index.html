@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Editor</title>
+    <link rel="stylesheet" href="css/extra-large.css">
+</head>
+
+<body onload="onInit()">
+    <header class="main-header flex align-center justify-space">
+        <div class="logo"><img src="img/logo/LOGO.png" alt=""></div>
+        <ul class="main-nav flex align-center justify-center clean-list">
+            <li><a class="flex align-center justify-center" href="#" onclick="onGalleryClicked()">Gallary</a></li>
+            <li><a class="flex align-center justify-center" href="#" onclick="onMemesClicked()">Memes</a></li>
+            <li><a class="flex align-center justify-center" href="#">About</a></li>
+        </ul>
+    </header>
+
+    <div class="memes-container"></div>
+
+    <main class="main-gallery flex">
+        <div class="main-fillter flex head justify-space">
+            <div class="file-input">
+                <input type="file" id="file" class="file" onchange="onImgInput(event)">
+                <label for="file">Select file</label>
+            </div>
+            <ul class="words-filter flex clean-list align-center justify-space">
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Funny</a></li>
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Animal</a></li>
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Men</a></li>
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Women</a></li>
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Comic</a></li>
+                <li><a class="flex align-center justify-center" href="#" onclick="onSortBy(this)">Smile</a></li>
+            </ul>
+        </div>
+
+        <div class="gallery"></div>
+    </main>
+
+    <div class="editor-page flex justify-space align-center">
+        <div class="canvas-container flex">
+            <canvas class="main-canvas" width="400" height="400"></canvas>
+        </div>
+        <div class="main-editor flex">
+            <div class="text-input flex">
+                <input type="text" class="aditor-input" oninput="onLineInput(this.value)">
+            </div>
+            <div class="text-controler flex">
+                <button class="btn-switch" onclick="onMoveBetweenLins()">
+                    <img class="icon" src="icons/arrow-up.png">
+                    <img class="icon" src="icons/arrow-down.png">
+                </button>
+                <button onclick="onAddLine()"><img class="icon btn-add" src="icons/+.png"></button>
+                <button onclick="onRemoveLine()"><img class="icon btn-remove" src="icons/delete.png"></button>
+            </div>
+            <div class="text-editor flex">
+                <button onclick="onBiggerFont()" class="btn-style"><img class="icon" src="icons/A+.png"></button>
+                <button onclick="onSmallerFont()" class="btn-style"><img class="icon" src="icons/A-.png"></button>
+                <button onclick="onDirectionLtr()" class="btn-style"><img class="icon"
+                        src="icons/align-left.png"></button>
+                <button onclick="onDirectionCenter()" class="btn-style"><img class="icon"
+                        src="icons/align-center.png"></button>
+                <button onclick="onDirectionRtl()" class="btn-style"><img class="icon"
+                        src="icons/align-right.png"></button>
+                <select name="font" class="font-family btn-style" onchange="onSetFont()">
+                    <option value="ariel">Ariel</option>
+                    <option value="david">David</option>
+                </select>
+                <button onclick="onStrokeWords()" class="btn-style"><img src="icons/s.png" alt=""></button>
+                <button class="btn-style">
+                    <img src="icons/color.png">
+                    <input type="color" oninput="onFill(this.value)">
+                </button>
+            </div>
+            <div class="share-box flex">
+                <form action="" method="POST" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
+                    <input name="img" id="imgData" type="hidden" />
+                    <button class="btn" type="submit"><img src="icons/share.png">Share</button>
+                    <div class="share-container"></div>
+                </form>
+                <a href="#" class="btn download-Btn" onclick="downloadCanvas(this)" download=""><img
+                        src="icons/download.png">Download</a>
+                <a href="#" class="btn doanloadBtn" onclick="onSaveCanvas(this)">Save</a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/storage-service.js"></script>
+    <script src="js/upload.service.js"></script>
+    <script src="js/meme.service.js"></script>
+    <script src="js/meme.controller.js"></script>
+</body>
+
+</html>

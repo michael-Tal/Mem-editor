@@ -1,0 +1,6 @@
+.editor-page{
+    flex-direction: column;
+}
+.main-editor{
+    margin-inline-start: 0px;
+}
