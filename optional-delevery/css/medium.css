@@ -1,0 +1,28 @@
+.gallery img {
+    max-width: 350px;
+}
+
+.editor-page{
+    /* margin: 10px;
+    padding: 5px; */
+    background-color: inherit;
+}
+.main-editor{
+    margin-inline-start: 0px;
+    flex-wrap: wrap;
+    /* margin-block-start: 20px; */
+}
+.main-canvas{
+    /* margin: 15px 30px; */
+    width: 250px;
+    margin: 5px;
+}
+.aditor-input{
+    width: 15rem;
+}
+.btn{
+    font-size: 15px
+}
+.main-nav a {
+    width: 3.25rem;
+}
