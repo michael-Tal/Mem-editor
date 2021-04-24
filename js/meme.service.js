@@ -225,15 +225,15 @@ function getMemeById(memeId) {
 function getPos() {
 
     var pos = {
-        x: 200,
-        y: 200
+        x: 150,
+        y: 150
     }
     if (!gMeme.lines.length) {
-        pos.x = 200;
+        pos.x = 150;
         pos.y = 50;
     } else if (gMeme.lines.length === 1) {
-        pos.x = 200;
-        pos.y = 350;
+        pos.x = 150;
+        pos.y = 250;
     }
     return pos
 }

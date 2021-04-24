@@ -1,7 +1,7 @@
 'use strict'
 
-var isMore = false
-var gKeyWordsLength;
+var isMore = true;
+var gKeyWordsLength = 5;
 
 function onInit() {
     renderKeywords()
