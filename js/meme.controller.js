@@ -1,11 +1,11 @@
 'use strict'
 
+var isMore = false
+var gKeyWordsLength;
 
 function onInit() {
-    gCanvas = document.querySelector('.main-canvas');
-    gCtx = gCanvas.getContext('2d');
+    renderKeywords()
     renderImgs()
-    addListeners()
 }
 
 function renderImgs() {
@@ -20,10 +20,7 @@ function renderImgs() {
     gallery.innerHTML = strHtml;
 }
 
-function onSaveCanvas(){
-    convertCanvasToImg();
-    renderMemes()
-}
+
 
 function renderMemes() {
     var memes = getMemes()
@@ -34,6 +31,22 @@ function renderMemes() {
     }).join('');
     var elMemeContainer = document.querySelector('.memes-container')
     elMemeContainer.innerHTML = strHtml;
+}
+
+function renderKeywords(){
+    var keywords = getKeywords();
+    var count= 0;
+    var strHtml=''
+    for (var key in keywords){
+        strHtml += `
+        <li><a style="font-size:${keywords[key]}px;" class="flex align-center justify-center" href="#" onclick="onSortBy(this)"">${key}</a></li>
+        `
+        if (count === gKeyWordsLength) break;
+        count++;
+        // break;
+    }
+    var elWordsFillter = document.querySelector('.words-filter')
+    elWordsFillter.innerHTML = strHtml;
 }
 
 function onMemeClicked(memeId) {
@@ -66,6 +79,9 @@ function onLineInput(val) {
 
 function onAddLine() {
     addLine();
+    var line = getLine();
+    if (!line) return
+    document.querySelector('.aditor-input').value = line.txt;
 }
 
 function onMoveBetweenLins() {
@@ -108,15 +124,8 @@ function onFill(color) {
     fillText(color);
 }
 
-function onStrokeWords(){
-    strokeWords()
-}
-
-function downloadCanvas(elLink) {
-    var meme = getMeme()
-    const data = gCanvas.toDataURL()
-    elLink.href = data
-    elLink.download = 'my-meme' + meme.selectedImgId + '.jpg'
+function onStrokeWords(color){
+    strokeWords(color)
 }
 
 function onImgInput(ev) {
@@ -128,7 +137,6 @@ function onSortBy(el){
     var sortTxt = el.innerText.toLowerCase();
     var fontSize = sortImg(sortTxt)
     el.style.fontSize = fontSize+'px'
-    console.log(fontSize);
     renderImgs();
 }
 
@@ -150,4 +158,19 @@ function onGalleryClicked(){
     var elMemes = document.querySelector('.memes-container');
     elMemes.style.display = 'none';
     renderImgs();
+}
+
+
+function onMoreOrLessClicked(elBtn){
+    var numOfKeywords;
+    if (!isMore){
+        numOfKeywords = 5
+        elBtn.innerText = 'More'
+    }else{
+        numOfKeywords =getKeywordsLength()
+        elBtn.innerText = 'Less'
+    }
+    isMore = !isMore
+    gKeyWordsLength = numOfKeywords
+    renderKeywords()
 }

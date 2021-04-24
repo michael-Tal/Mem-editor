@@ -1,4 +1,4 @@
-@import "large.css" screen and (max-width: 1160px);
+@import "large.css" screen and (max-width: 850px);
 @import "medium.css" screen and (max-width:580px);
 @import "small.css" screen and (max-width:330px);
 /* general */
@@ -269,7 +269,8 @@ textarea:focus, input:focus{
     align-content: space-between;
     background-color: #383b42;
     border-radius: 2rem;
-    margin-inline-start: 50px;
+    /* margin-inline-start: 50px; */
+    max-width: 400px;
 }
 
 .main-editor>*{
@@ -277,7 +278,7 @@ textarea:focus, input:focus{
 }
 
 .aditor-input{  
-        width: 28rem;
+        width: 14em;
         height: 3.437rem;
         border-radius: 2rem;
         font-size: 1.5rem;
@@ -322,18 +323,15 @@ textarea:focus, input:focus{
 }
 
 .canvas-container{
-    position:relative;
-    top: -8%;
-    height: 80%;
-    max-width: 1200px;
     background-color: rgba(235, 238, 243, 0.198);
     border-radius: 30px;
+    margin-inline-end: 20px;
 }
 
 .editor-page{
     display: none;
-    padding: 50px;
     background-color: rgba(92, 92, 92, 0.55);
-    margin: 20px;
     border-radius: 1rem;
+    /* flex-direction: row; */
+    justify-content: center;
 }

@@ -5,17 +5,14 @@ const IMGS_KEY = 'images'
 const MEMES_KEY = 'memes'
 
 const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
-var gCanvas;
-var gCtx;
 var gId = 1;
 var gImgs;
 var gMeme;
 var gCurrImg;
 var gSortedImgs;
 var gMemes;
-// var gLineSize;
 var gStartPos;
-var gKeyWords = { 'funny': 25, 'animal': 19, 'men': 10, 'women': 17, 'comic': 6, 'smile': 3, 'random': 20 }
+var gKeyWords = { 'funny': 25, 'animal': 19, 'men': 10, 'women': 17, 'comic': 6, 'smile': 3, 'random': 20 ,'kuki':6,'poki':12,'toki':19,'rooki':10,'sdv':13,'dfgh':20,'dsfgfhg':17,'sdafdgfh':18,'sdsfdg':10}
 
 createImgs()
 
@@ -54,6 +51,18 @@ function createImg(url = 'img/1.jpg', keywords = 'random') {
 
 }
 
+function getKeywords(){
+    return gKeyWords;
+}
+
+function getKeywordsLength(){
+    var count = 0
+    for (var key in gKeyWords){
+        count++;
+    }
+    return count;
+}
+
 function getImgs() {
     if (gSortedImgs) return gSortedImgs;
     return gImgs;
@@ -61,31 +70,18 @@ function getImgs() {
 
 function getMemes(){
     gMemes = loadFromStorage(MEMES_KEY)
-    if (!gMemes) return
+    if (!gMemes) return;
     return gMemes;
 }
 
 function memeClick(memeId) {
     var meme = getMemeById(memeId);
-    var image = new Image();
-    image.src = meme.url;
-    image.onload = () => {
-        gCtx.drawImage(image, 0, 0, gCanvas.width, gCanvas.height);
-    }
-    gCurrImg = image;
-    createMeme(meme);
+    drawImageOnCanvas(meme);
 }
 
 function imgClick(imgId) {
     var img = getImgById(imgId);
-    var image = new Image();
-    image.src = img.url;
-    image.onload = () => {
-        gCtx.drawImage(image, 0, 0, gCanvas.width, gCanvas.height);
-    }
-    gCurrImg = image;
-    createMeme(img);
-
+    drawImageOnCanvas(img);
 }
 
 function createMeme(img) {
@@ -98,15 +94,6 @@ function createMeme(img) {
     renderCanvas();
 }
 
-// function lineSize() {
-//     var line = getLine();
-//     var size = {
-//         height: line.height,
-//         width: line.width
-//     }
-//     gLineSize = size;
-// }
-
 function lineInput(val) {
     if (!gMeme) return;
     var line = getLine();
@@ -114,20 +101,15 @@ function lineInput(val) {
         line = addLine();
     }
     line.txt = val;
-    line.width = gCtx.measureText(val).width
-    gCtx.beginPath();
-    gCtx.textAlign = line.align;
-    gCtx.fillStyle = line.color;
-    gCtx.font = (line.fontSize + 'px ' + line.font);
-    gCtx.fillText(line.txt, line.pos.x, line.pos.y);
-    gCtx.closePath();
-    renderCanvas()
+    line.width = gCtx.measureText(val).width;
+    renderCanvas();
 }
 
 function addLine() {
     if (!gMeme) return;
     var line = createLine();
     gMeme.lines.push(line);
+    MoveBetweenLins();
     return line;
 }
 
@@ -143,45 +125,26 @@ function createLine() {
         height: 30,
         align: 'center',
         color: 'red',
+        stroke: 'black',
         width: 0,
-        stroke: false,
         fontSize: 30,
         isDragging: false,
         pos: getPos(),
         font: 'Ariel',
         isDragging: false,
     }
-    return line
+    return line;
 }
 
-function addListeners() {
-    addMouseListeners()
-    addTouchListeners()
-    window.addEventListener('resize', () => {
-        resizeCanvas()
-        renderCanvas()
-    })
-}
 
-function addMouseListeners() {
-    gCanvas.addEventListener('mousemove', onMove)
-    gCanvas.addEventListener('mousedown', onDown)
-    gCanvas.addEventListener('mouseup', onUp)
-}
-
-function addTouchListeners() {
-    gCanvas.addEventListener('touchmove', onMove)
-    gCanvas.addEventListener('touchstart', onDown)
-    gCanvas.addEventListener('touchend', onUp)
-}
 
 function onDown(ev) {
+    const pos = getEvPos(ev);
+    if(!selectTheCorectLine(pos)) return;
     var line= getLine();
-    if(!line) return
-    const pos = getEvPos(ev)
-    if (!isLineClicked(pos)) return
-    line.isDragging = true
-    gStartPos = pos
+    if(!line) return;
+    line.isDragging = true;
+    gStartPos = pos;
     document.body.style.cursor = 'grabbing'
 }
 
@@ -208,11 +171,26 @@ function onUp() {
     document.body.style.cursor = 'grab'
 }
 
-function isLineClicked(clickedPos) {
-    var line = getLine();
-    const pos = line.pos;
-    const distance = Math.sqrt((pos.x - clickedPos.x) ** 2 + (pos.y - clickedPos.y) ** 2)
-    return distance <= line.width;
+function selectTheCorectLine(clickedPos) {
+    const minLimit = 50
+    var minDistance = Infinity;
+    var idx;
+    var distance;
+    for (var i =0 ; i<gMeme.lines.length; i++){
+        var line = gMeme.lines[i];
+        const pos = line.pos;
+        distance = Math.sqrt((pos.x - clickedPos.x) ** 2 + (pos.y - clickedPos.y) ** 2)
+        if (distance < minDistance){
+            minDistance = distance; 
+            idx = i
+        }
+    }
+    if (minDistance < minLimit) {
+        gMeme.selectedLineIdx = idx;
+        return true
+    }
+    return false;
+
 }
 
 function getEvPos(ev) {
@@ -231,12 +209,6 @@ function getEvPos(ev) {
     return pos
 }
 
-function resizeCanvas() {
-    const elContainer = document.querySelector('.main-canvas')
-    console.dir(elContainer);
-    gCanvas.width = elContainer.width
-    gCanvas.height = elContainer.height
-}
 
 function getImgById(imgId) {
     return gImgs.find(img => {
@@ -266,22 +238,17 @@ function getPos() {
     return pos
 }
 
-function renderCanvas() {
-    gCtx.save()
-    gCtx.drawImage(gCurrImg, 0, 0, gCanvas.width, gCanvas.height);
-    gCtx.restore()
-    if (gMeme.lines.length) renderLines()
-}
+
 
 function renderLines() {
     return gMeme.lines.forEach(line => {
         gCtx.beginPath();
         gCtx.textAlign = line.align;
         gCtx.fillStyle = line.color;
-        gCtx.strokeStyle = line.color
+        gCtx.strokeStyle = line.stroke;
         gCtx.font = (line.fontSize + 'px ' + line.font);
-        if (line.stroke) gCtx.strokeText(line.txt, line.pos.x, line.pos.y);
-        else gCtx.fillText(line.txt, line.pos.x, line.pos.y);
+        gCtx.strokeText(line.txt, line.pos.x, line.pos.y);
+        gCtx.fillText(line.txt, line.pos.x, line.pos.y);
         gCtx.closePath();
     });
 }
@@ -297,9 +264,7 @@ function biggerFont() {
     var line = getLine();
     if (line.fontSize > 220) return
     line.fontSize += 5;
-    lineInput(line.txt);
-    console.log(gMeme.lines[gMeme.selectedLineIdx]);
-    // renderCanvas();
+    renderCanvas()
 }
 
 function smallerFont() {
@@ -307,56 +272,52 @@ function smallerFont() {
     var line = getLine();
     if (line.fontSize <= 15) return
     line.fontSize -= 5;
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 }
 
 function directionLtr() {
     if (!gMeme) return;
     var line = getLine();
     line.align = 'right'
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 }
 
 function directionCenter() {
     if (!gMeme) return;
     var line = getLine();
     line.align = 'center'
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 }
 
 function directionRtl() {
     if (!gMeme) return;
     var line = getLine();
     line.align = 'left'
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 }
 
 function setFont(font) {
     if (!gMeme) return;
     var line = getLine();
     line.font = font;
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 
 }
 
 function fillText(color) {
     if (!gMeme) return;
     var line = getLine();
+    line.stroke='';
     line.color = color;
-    lineInput(line.txt);
-    // renderCanvas();
+    renderCanvas();
 }
 
-function strokeWords(){
+function strokeWords(color){
     if (!gMeme) return;
     var line = getLine();
-    line.stroke = true;
-    lineInput(line.txt);
+    line.fill='';
+    line.stroke = color;
+    renderCanvas();
 }
 
 function getLine() {
