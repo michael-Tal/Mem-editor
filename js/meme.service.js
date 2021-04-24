@@ -238,21 +238,6 @@ function getPos() {
     return pos
 }
 
-
-
-function renderLines() {
-    return gMeme.lines.forEach(line => {
-        gCtx.beginPath();
-        gCtx.textAlign = line.align;
-        gCtx.fillStyle = line.color;
-        gCtx.strokeStyle = line.stroke;
-        gCtx.font = (line.fontSize + 'px ' + line.font);
-        gCtx.strokeText(line.txt, line.pos.x, line.pos.y);
-        gCtx.fillText(line.txt, line.pos.x, line.pos.y);
-        gCtx.closePath();
-    });
-}
-
 function MoveBetweenLins() {
     if (!gMeme) return;
     if (gMeme.selectedLineIdx === gMeme.lines.length - 1) gMeme.selectedLineIdx = 0;
@@ -301,7 +286,6 @@ function setFont(font) {
     var line = getLine();
     line.font = font;
     renderCanvas();
-
 }
 
 function fillText(color) {

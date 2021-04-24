@@ -65,3 +65,17 @@ function renderCanvas() {
     if (gMeme.lines.length) renderLines()
 }
 
+function renderLines() {
+    return gMeme.lines.forEach(line => {
+        console.log(line);
+        gCtx.beginPath();
+        gCtx.font = (line.fontSize + 'px ' + line.font);
+        console.log(gCtx.font);
+        gCtx.textAlign = line.align;
+        gCtx.fillStyle = line.color;
+        gCtx.strokeStyle = line.stroke;
+        gCtx.strokeText(line.txt, line.pos.x, line.pos.y);
+        gCtx.fillText(line.txt, line.pos.x, line.pos.y);
+        gCtx.closePath();
+    });
+}

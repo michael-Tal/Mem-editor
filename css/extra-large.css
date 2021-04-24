@@ -3,6 +3,14 @@
 @import "small.css" screen and (max-width:330px);
 /* general */
 
+/* fonts */
+
+@font-face{
+    font-family: Bungee;
+    src: url(../fonts/Bungee/Bungee-Regular.ttf);
+    /* font-weight: bold; */
+}
+
 html{
     box-sizing: border-box;
 }
@@ -14,6 +22,7 @@ body{
 
 
 .btn {
+    
     background: #4267b2;
     border: 1px solid #4267b2;
     font-size: 25px;

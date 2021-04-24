@@ -117,6 +117,7 @@ function onDirectionRtl() {
 
 function onSetFont() {
     var font = document.querySelector('.font-family').value;
+    console.log(font);
     setFont(font);
 }
 
